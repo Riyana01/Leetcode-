@@ -1,0 +1,27 @@
+void rotate(int** matrix, int matrixSize, int* matrixColSize) {
+    int n= matrixSize;
+        //transpose the matrix
+        for(int i=0; i<n; i++){
+            for (int j=0; j<=i; j++){
+                // swap element
+               int temp = matrix[i][j];
+               matrix[i][j] = matrix[j][i];
+               matrix[j][i] = temp;
+            }
+        }
+
+        // swap the left column with right column
+        int left=0, right=n-1;
+        while(left < right)
+        {
+            for(int i=0; i<n; i++){
+                // swap
+                int temp = matrix[i][left];
+                matrix[i][left] = matrix[i][right];
+                matrix[i][right] = temp;
+            }
+            left++; 
+            right--;
+        }
+
+}
