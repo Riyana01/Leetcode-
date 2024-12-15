@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+// 5 soatcha fikrladim  
+int count;
+
+struct TreeNode*createNode(int digit){
+    struct TreeNode * newnode = malloc(sizeof(struct TreeNode));
+    newnode->val = digit;
+    newnode->left = NULL;
+    newnode->right = NULL;
+
+    return newnode;
+}
+
+struct TreeNode* bst(struct TreeNode *root, int digit){
+    if(root == NULL)
+        return createNode(digit);
+    else if(root->val > digit)
+        root->left = bst(root->left, digit);
+    else
+        root->right = bst(root->right, digit); 
+    return root;
+}
+
+void swap(int *a, int *b){
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void permute(int arr[], int size, struct TreeNode **output, int start, int end){
+    if(start == end){
+        struct TreeNode*root = NULL;
+        for(int i = 0; i < size; i++){
+            root = bst(root, arr[i]);
+        }
+        output[count] = root;
+        count++;
+        return;
+    }
+
+    for(int i = start; i <= end; i++){
+        swap(&arr[i], &arr[start]);
+        if(start > 0 && start != i && abs(arr[start] - arr[i]) > 1 ) {
+            int j;
+            for(j = 0; j < start; j++){
+                if((arr[j] < arr[start] && arr[j] > arr[i]) || (arr[j] > arr[start] && arr[j] < arr[i]))
+                    break;
+            }
+            
+            if(j != start){
+                swap(&arr[i], &arr[start]);
+                continue;
+            } 
+        }
+        
+        permute(arr, size, output, start + 1, end);
+        swap(&arr[i], &arr[start]);
+    }
+}
+
+struct TreeNode** generateTrees(int n, int* returnSize){
+    struct TreeNode **output = (struct TreeNode**)malloc(sizeof(struct TreeNode *) * 1430);
+    count = 0;
+
+    int arr[n];
+    for(int i = 0; i < n; i++){
+        arr[i] = i + 1;
+    }
+
+    permute(arr, sizeof(arr) / sizeof(arr[0]), output, 0, n - 1);
+    
+    *returnSize = count;
+    return output;
+}
