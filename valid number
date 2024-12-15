@@ -1,0 +1,23 @@
+bool isNumber(char* s) {
+    bool numSeen = false,dotSeen = false,eSeen = false,numAfterE = true; 
+    while (*s == ' ') {s++;}
+    if (*s == '+' || *s == '-') {s++;}
+    while (*s) {
+        if (isdigit(*s)) {numSeen = true;numAfterE = true;}
+        else if (*s == '.') {
+            if (dotSeen || eSeen) {return false;}
+            dotSeen = true;
+        } 
+        else if (*s == 'e' || *s == 'E') {
+            if (eSeen || !numSeen) {return false;}
+            eSeen = true;numAfterE = false;  
+        } 
+        else if (*s == '+' || *s == '-') {
+            if (*(s - 1) != 'e' && *(s - 1) != 'E') {return false;}
+        } 
+        else break;
+        s++;
+    }
+    while (*s == ' ') {s++;}
+    return numSeen && numAfterE && *s == '\0'; 
+}
