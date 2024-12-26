@@ -1,0 +1,35 @@
+int C(int n, int k){
+    if(k > 1)
+        return n * C(n - 1, k - 1) / k;
+    else
+        return n;
+}
+
+inline void create(int num, int n, int *ans){
+    int i, j;
+    for(i = 0, j = 0; i < n; i++){
+        if((num & (1 << i)) > 0)
+            ans[j++] = i + 1;
+    }
+}
+
+int** combine(int n, int k, int* returnSize, int** returnColumnSizes){
+    register int i, j, total = C(n, k), count = 0;
+    int **ans = (int**)malloc(total * sizeof(int*));
+    int *col = (int*)malloc(total * sizeof(int));
+    for(i = 0; i < total; i++){
+        ans[i] = (int*)calloc(k, sizeof(int));
+        col[i] = k;
+    }
+    *returnColumnSizes = col;
+    *returnSize = total;
+    
+    for(i = 1; i < 1 << n; i++){
+        if(__builtin_popcount(i) == k){
+            create(i, n, ans[count]);
+            count++;
+        }
+    }
+    
+    return ans;
+}
